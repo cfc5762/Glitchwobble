@@ -6,6 +6,7 @@ TagManager:
   tags:
   - SweetSpot
   - FirePoint
+  - SlashBox
   layers:
   - Default
   - TransparentFX
