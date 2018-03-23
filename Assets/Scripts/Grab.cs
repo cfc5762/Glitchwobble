@@ -4,6 +4,7 @@ using UnityEngine;
 using Valve.VR.InteractionSystem;
 
 public class Grab : MonoBehaviour {
+    int grabTimer = 0;
     int jumpTimer = 30;
     SteamVR_Controller.Device cont;
     GameObject heldItem = null;
@@ -18,6 +19,10 @@ public class Grab : MonoBehaviour {
     {
         if (jumpTimer < 30)
             jumpTimer += 1;//this gets the timer to 30 in 30 frames
+        if (grabTimer > 0)
+        {
+            grabTimer--;
+        }
     }
     void Update()
     {
@@ -26,6 +31,13 @@ public class Grab : MonoBehaviour {
 
             if (heldItem != null)//held item stuff here 
             {
+                
+                if (cont != null && cont.GetPressDown(Valve.VR.EVRButtonId.k_EButton_Grip)&&grabTimer<1)
+                {
+                    heldItem.transform.parent = null;
+                    heldItem = null;
+                }
+
                 if (heldItem.GetComponent<Blaster>() != null)
                 {
                     Blaster gun = heldItem.GetComponent<Blaster>();
@@ -95,24 +107,21 @@ public class Grab : MonoBehaviour {
     }
     void OnTriggerStay(Collider C)//grabby stuff here
     {
-
-        if (cont != null && cont.GetPressDown(Valve.VR.EVRButtonId.k_EButton_Grip) && C.gameObject.CompareTag("Grabbable") && transform.childCount < 1)
+        print("touching");
+        if (cont != null && cont.GetPressDown(Valve.VR.EVRButtonId.k_EButton_Grip) && C.gameObject.CompareTag("Grabbable")&&heldItem==null)
         {
-
+            print("trying");
             C.transform.parent = this.gameObject.transform;
             heldItem = C.gameObject;
-            if (C.transform.childCount > 0&& C.transform.GetChild(0).CompareTag("Sweetspot"))
-            {
-                C.transform.localPosition = -C.transform.GetChild(0).localPosition * C.transform.GetChild(0).localScale.x;
-                C.transform.localRotation = Quaternion.Euler(-C.transform.GetChild(0).localRotation.eulerAngles);
-
-            }
+            if (heldItem.transform.GetChild(0).CompareTag("SweetSpot")) {
+                heldItem.transform.localRotation = Quaternion.Euler(-heldItem.transform.GetChild(0).localRotation.eulerAngles);
+                heldItem.transform.position -= heldItem.transform.GetChild(0).position-transform.position;
+                
+                grabTimer = 5;
+                    
+                    }
 
         }
-        else if (cont != null && cont.GetPressDown(Valve.VR.EVRButtonId.k_EButton_Grip) && C.gameObject.CompareTag("Grabbable"))
-        {
-            C.transform.parent = null;
-            heldItem = null;
-        }
+      
     }
 }
