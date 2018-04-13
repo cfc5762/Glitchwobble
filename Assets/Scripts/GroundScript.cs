@@ -11,14 +11,15 @@ public class GroundScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
-    void OnCollisionStay(Collision collision)
-    {
-        OnGround = true;
+        Debug.DrawLine(transform.position,transform.position - (transform.up * 2f), Color.blue);
+        if (Physics.Raycast(transform.position, -transform.up, 2f))
+        {
+            OnGround = true;
+        }
+        else
+        {
+            OnGround = false;
+        }
     }
-    void OnCollisionExit(Collision collision)
-    {
-        OnGround = false;
-    }
+    
 }

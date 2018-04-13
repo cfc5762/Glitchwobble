@@ -11,7 +11,7 @@ public class Player : Scenemanager {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
-	}
+	void FixedUpdate () {
+        Scenemanager.Player = this.gameObject;
+    }
 }

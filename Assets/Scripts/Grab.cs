@@ -31,54 +31,57 @@ public class Grab : MonoBehaviour {
 
             if (heldItem != null)//held item stuff here 
             {
-                
+                if (heldItem.GetComponent<Blaster>() != null)
+                {
+                    Blaster gun = heldItem.GetComponent<Blaster>();
+
+                    if (cont.GetHairTrigger())
+                    {
+                        bool blasted = false;
+                        for (int i = 0; i < heldItem.transform.childCount; i++)
+                        {
+                            if (heldItem.transform.GetChild(i).CompareTag("FirePoint"))
+                            {
+                                blasted = true;
+                                gun.Blast(heldItem.transform.GetChild(i).transform.position, null, 100f);
+                            }
+                        }
+                        if (!blasted)
+                        {
+                            gun.Blast(null, 100f);
+                        }
+
+
+                    }
+                }
+                //stop held item stuff here
                 if (cont != null && cont.GetPressDown(Valve.VR.EVRButtonId.k_EButton_Grip)&&grabTimer<1)
                 {
                     heldItem.transform.parent = null;
                     heldItem = null;
                 }
 
-                if (heldItem.GetComponent<Blaster>() != null)
-                {
-                    Blaster gun = heldItem.GetComponent<Blaster>();
-                    
-                    if (cont.GetHairTrigger())
-                    {
-                        bool blasted = false;
-                            for (int i = 0; i < heldItem.transform.childCount; i++)
-                            {
-                                if (heldItem.transform.GetChild(i).CompareTag("FirePoint"))
-                                {
-                                    blasted = true;
-                                    gun.Blast(heldItem.transform.GetChild(i).transform.position,null,100f);
-                                }
-                            }
-                        if (!blasted)
-                        {
-                            gun.Blast(null, 100f);
-                        }
-                        
-                        
-                    }
-                }
+               
             }
-            if (cont.Equals(SteamVR_Controller.DeviceRelation.Leftmost)&&GroundScript.OnGround)//left hand stuff goes here
+            if (cont == SteamVR_Controller.Input(SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.FarthestLeft)))//left hand stuff goes here
             {
                
                 Rigidbody Rig3D = Scenemanager.Player.GetComponent<Rigidbody>();
+                //print(Scenemanager.Player.name);
                 Vector3 ovel =  Rig3D.velocity;
                 Vector3 vel = Rig3D.velocity;
                 Vector2 axis = new Vector3(cont.GetState().rAxis0.x, cont.GetState().rAxis0.y);
                 float y = vel.y;
-                if (GroundScript.OnGround && cont.GetPressDown(Valve.VR.EVRButtonId.k_EButton_Dashboard_Back)&&jumpTimer>29)
+                if (cont.GetPressDown(Valve.VR.EVRButtonId.k_EButton_Axis0) && GroundScript.OnGround && jumpTimer>29)
                 {
                     vel.y = 5f;
+                    y = 5f;
                     jumpTimer = 0;
                 }
                 ovel.y = 0;
                 vel.y = 0;
                 
-                vel += Vector3.ClampMagnitude(Head.head.transform.forward * axis.y + Rig3D.transform.right * axis.x, .3f * axis.magnitude);
+                vel += Vector3.ClampMagnitude(Head.head.transform.forward * axis.y + Head.head.transform.right * axis.x, .3f * axis.magnitude);
                 if (vel.magnitude > 6f * axis.magnitude && ovel.magnitude > vel.magnitude)
                 {
                     vel.y = y;
@@ -94,7 +97,7 @@ public class Grab : MonoBehaviour {
                     Rig3D.velocity = vel;
                 }
             }
-            if (cont.Equals(SteamVR_Controller.DeviceRelation.Rightmost))//right hand stuff here
+            if (cont == SteamVR_Controller.Input(SteamVR_Controller.GetDeviceIndex(SteamVR_Controller.DeviceRelation.FarthestRight)))//right hand stuff here
             {
                 Scenemanager.Player.transform.Rotate(new Vector3(0, 10, 0)* cont.GetState().rAxis0.x);
             }
