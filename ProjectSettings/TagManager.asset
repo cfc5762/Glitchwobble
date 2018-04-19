@@ -8,6 +8,9 @@ TagManager:
   - FirePoint
   - SlashBox
   - Grabbable
+  - projectile
+  - FxTemporaire
+  - Enemy
   layers:
   - Default
   - TransparentFX
