@@ -43,7 +43,7 @@ public class Blaster : MonoBehaviour {
         if (Physics.Raycast(position, transform.forward, out target, distance))
         {
             // kill that muthafucka!
-            Debug.DrawRay(position, transform.forward);
+            Debug.DrawLine(position,position+transform.forward*6);
             Health healthScript = target.transform.gameObject.GetComponent<Health>();
             if (healthScript != null)
             {
