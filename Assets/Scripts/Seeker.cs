@@ -9,7 +9,7 @@ public class Seeker : Vehicle {
     Vector3 idleTarget;
     Vector3 currentTarget;
     bool isSeeking;
-    float range = 10;
+    float range = 20;
 
     public bool IsSeeking
     {
